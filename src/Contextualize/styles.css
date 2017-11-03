@@ -1,0 +1,32 @@
+.Contextualize {
+  display: flex;
+  flex-direction: column;
+}
+
+.Contextualize-curve {
+  background: #ddd;
+}
+
+.Contextualize-curve-cursor-container {
+  position: relative;
+  margin: 0 40px;
+}
+
+.Contextualize-curve-cursor {
+  border: 20px solid transparent;
+  transform: translate(-50%);
+  border-bottom-color: white;
+  height: 0;
+  width: 0;
+  position: absolute;
+  bottom: 0;
+}
+
+.Contextualize-params {
+  flex: 1;
+}
+
+.Project-params-actions {
+  padding: 10px;
+  margin: auto;
+}

@@ -1,0 +1,46 @@
+.App {
+  height: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.NavBar-list {
+  display: flex;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
+
+.NavBar-item {
+  flex: 1;
+  display: block;
+}
+
+.NavBar-item-link {
+  display: block;
+  background: #999;
+  text-decoration: none;
+  padding: 20px;
+  color: #ccc;
+  font-weight: bold;
+}
+
+.NavBar-item-link:hover {
+  background: #888;
+}
+
+.NavBar-item-link--selected {
+  background: #888;
+}
+
+.Main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.ContextSelector {
+  text-align: center;
+  padding: 10px;
+}

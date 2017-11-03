@@ -1,0 +1,45 @@
+.Preview {
+  display: flex;
+  flex: 1;
+}
+
+.Preview-contexts {
+  flex: 0 0 300px;
+  
+  display: flex;
+  flex-direction: column;
+}
+
+.Preview-save {
+  display: block;
+  padding: 20px;
+}
+
+.Preview-typonyms {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+}
+
+.Preview-typonyms-item {
+  display: block;
+  border-bottom: 1px solid #ddd;
+}
+
+.ContextsParams {
+  background: #eee;
+  height: 100%;
+}
+
+.ContextsParams-list {
+  padding: 0;
+  margin: 0;
+  flex: 1;
+}
+
+.ContextsParams-list-item {
+  display: block;
+}

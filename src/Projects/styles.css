@@ -1,0 +1,99 @@
+.ProjectsPage {
+  display: flex;
+  flex: 1;
+}
+
+.Projects {
+  flex: 0 0 300px;
+
+  display: flex;
+  flex-direction: column;
+
+  background: rgb(231, 231, 231);
+}
+
+.Projects-list {
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.Projects-list-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.Projects-list-item-link {
+  display: block;
+  padding: 20px;
+  text-decoration: none;
+  color: #222;
+}
+
+.Projects-list-item-link:hover {
+  background: #ccc;
+}
+
+.Projects-list-item-link--selected {
+  background: #aaa;
+}
+
+.Projects-list-add {
+  padding: 20px;
+  cursor: pointer;
+}
+
+.Project {
+  flex: 1;
+
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.Project-name {
+  flex: 1;
+}
+
+.Project-name-input {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 20px;
+  font-family: CustomFont;
+  font-size: 48px;
+  height: 100%;
+}
+
+.Project-params {
+  flex: 0 500px;
+}
+
+.ParamsList {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.ParamsList-list {
+  margin: 0;
+  padding: 0;
+}
+
+
+.ParamsList-item {
+  display: block;
+  text-align: center;
+  padding: 20px 40px;
+}
+
+.ParamsList-item-label {
+  display: block;
+  padding: 10px;
+}
+
+.ParamsList-item-slider {
+  margin: auto;
+  display: block;
+  width: 100%;
+}

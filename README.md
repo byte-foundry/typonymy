@@ -2,6 +2,17 @@
 
 This project is made to relate parametric typefaces to contexts. Initially made to work in cartography field.
 
+## Installation
+
+```bash
+yarn
+yarn start
+
+# or
+npm install
+npm start
+```
+
 ## How does it work
 
 ### Projects

@@ -1,18 +1,18 @@
 /* global Ptypo */
 
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  NavLink,
-} from 'react-router-dom';
+  NavLink
+} from "react-router-dom";
 
-import './App.css';
+import "./App.css";
 
-import Projects from './Projects';
-import Contextualize from './Contextualize';
-import Preview from './Preview';
+import Projects from "./Projects";
+import Contextualize from "./Contextualize";
+import Preview from "./Preview";
 const NoMatch = () => <div>Oops</div>;
 
 class ProjectList extends Component {
@@ -21,7 +21,7 @@ class ProjectList extends Component {
       projects,
       selectedProjectIndex,
       onAddProject,
-      onSelectProject,
+      onSelectProject
     } = this.props;
 
     return (
@@ -32,8 +32,8 @@ class ProjectList extends Component {
               <a
                 href="#"
                 className={`Projects-list-item-link ${i === selectedProjectIndex
-                  ? 'Projects-list-item-link--selected'
-                  : ''}`}
+                  ? "Projects-list-item-link--selected"
+                  : ""}`}
                 onClick={() => onSelectProject(id)}
               >
                 {name}
@@ -65,21 +65,21 @@ class App extends Component {
       selectedProjectIndex: 0,
       selectedContextIndex: 0,
       projects: [],
-      contexts: ['zoom', 'fontSize', 'darkness'],
-      typonyms: {},
+      contexts: ["zoom", "fontSize", "darkness"],
+      typonyms: {}
     };
   }
 
   async componentDidMount() {
     const prototypoFontFactory = new Ptypo.default();
 
-    const savedProjects = JSON.parse(localStorage.getItem('projects'));
+    const savedProjects = JSON.parse(localStorage.getItem("projects"));
 
     this.setState({ loading: true });
 
     const font = await prototypoFontFactory.createFont(
-      'CustomFont',
-      Ptypo.templateNames.SPECTRAL,
+      "CustomFont",
+      Ptypo.templateNames.SPECTRAL
     );
 
     this.setState({ font });
@@ -88,7 +88,7 @@ class App extends Component {
       this.addProject();
     }
 
-    this.setState({...savedProjects, loading: false });
+    this.setState({ ...savedProjects, loading: false });
   }
 
   componentDidUpdate() {
@@ -97,7 +97,7 @@ class App extends Component {
       projects,
       contexts,
       typonyms,
-      selectedProjectIndex,
+      selectedProjectIndex
     } = this.state;
 
     const currentProject = projects[selectedProjectIndex];
@@ -106,12 +106,12 @@ class App extends Component {
       font.changeParams(projects[selectedProjectIndex].values);
 
     localStorage.setItem(
-      'projects',
+      "projects",
       JSON.stringify({
         projects,
         contexts,
-        typonyms,
-      }),
+        typonyms
+      })
     );
   }
 
@@ -121,15 +121,15 @@ class App extends Component {
         ...state.projects,
         {
           id: Date.now(),
-          name: 'New project',
+          name: "New project",
           values: state.font.json.controls
             .reduce((acc, control) => acc.concat(control.parameters), [])
             .reduce((params, { name, init }) => {
               params[name] = init;
               return params;
-            }, {}),
-        },
-      ],
+            }, {})
+        }
+      ]
     }));
   };
 
@@ -138,8 +138,8 @@ class App extends Component {
       projects: [
         ...projects.slice(0, selectedProjectIndex),
         { ...projects[selectedProjectIndex], values: newValues },
-        ...projects.slice(selectedProjectIndex + 1),
-      ],
+        ...projects.slice(selectedProjectIndex + 1)
+      ]
     }));
   };
 
@@ -148,16 +148,16 @@ class App extends Component {
       projects: [
         ...projects.slice(0, selectedProjectIndex),
         { ...projects[selectedProjectIndex], name: newName },
-        ...projects.slice(selectedProjectIndex + 1),
-      ],
+        ...projects.slice(selectedProjectIndex + 1)
+      ]
     }));
   };
 
   selectProject = id => {
     this.setState(state => ({
       selectedProjectIndex: state.projects.findIndex(
-        project => id === project.id,
-      ),
+        project => id === project.id
+      )
     }));
   };
 
@@ -165,24 +165,24 @@ class App extends Component {
     this.setState({
       typonyms: {
         ...this.state.typonyms,
-        [typonymId]: typonym,
-      },
+        [typonymId]: typonym
+      }
     });
   };
 
   saveProject = () => {
     const { projects, contexts, typonyms } = this.state;
 
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = `data:text/json;charset=utf-8,${encodeURIComponent(
       JSON.stringify({
         projects,
         contexts,
-        typonyms,
-      }),
+        typonyms
+      })
     )}`;
-    link.target = '_blank';
-    link.download = 'projects.json';
+    link.target = "_blank";
+    link.download = "projects.json";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -196,22 +196,24 @@ class App extends Component {
       selectedProjectIndex,
       contexts,
       selectedContextIndex,
-      typonyms,
+      typonyms
     } = this.state;
 
-    if (loading) {
-      return <p>loading</p>;
+    let currentProject;
+    let currentContext;
+    let typonymId;
+    let typonym;
+    if (!loading) {
+      currentProject = projects[selectedProjectIndex];
+      currentContext = contexts[selectedContextIndex];
+      typonymId = currentProject.id + "-" + currentContext;
+      typonym = {
+        project: currentProject.id,
+        context: currentContext,
+        keypoints: [[0, {}], [100, {}]],
+        ...typonyms[typonymId]
+      };
     }
-
-    const currentProject = projects[selectedProjectIndex];
-    const currentContext = contexts[selectedContextIndex];
-    const typonymId = currentProject.id + '-' + currentContext;
-    const typonym = {
-      project: currentProject.id,
-      context: currentContext,
-      keypoints: [[0, {}], [100, {}]],
-      ...typonyms[typonymId],
-    };
 
     return (
       <Router>
@@ -250,84 +252,90 @@ class App extends Component {
               </li>
             </ul>
           </nav>
-          <Switch>
-            <Route
-              path="/preview"
-              render={() => (
-                <Preview
-                  saveProject={this.saveProject}
-                  contexts={contexts}
-                  projects={projects}
-                  typonyms={typonyms}
-                />
-              )}
-            />
-            <Route
-              path="/"
-              children={() => (
-                <div className="ProjectsPage">
-                  <ProjectList
+          {loading ? (
+            <div className="App-loading">
+              <p className="App-loading-text">Loading...</p>
+            </div>
+          ) : (
+            <Switch>
+              <Route
+                path="/preview"
+                render={() => (
+                  <Preview
+                    saveProject={this.saveProject}
+                    contexts={contexts}
                     projects={projects}
-                    selectedProjectIndex={selectedProjectIndex}
-                    onAddProject={this.addProject}
-                    onSelectProject={this.selectProject}
+                    typonyms={typonyms}
                   />
-                  <Switch>
-                    <Route
-                      exact
-                      path="/"
-                      render={() => (
-                        <Projects
-                          font={font}
-                          project={currentProject}
-                          onChangeValues={newValues =>
-                            this.saveValues(selectedProjectIndex, newValues)}
-                          onRenameProject={newName =>
-                            this.renameProject(selectedProjectIndex, newName)}
-                        />
-                      )}
+                )}
+              />
+              <Route
+                path="/"
+                children={() => (
+                  <div className="ProjectsPage">
+                    <ProjectList
+                      projects={projects}
+                      selectedProjectIndex={selectedProjectIndex}
+                      onAddProject={this.addProject}
+                      onSelectProject={this.selectProject}
                     />
-                    <Route
-                      path="/contextualize"
-                      render={() => (
-                        <div className="Main">
-                          <div
-                            key="context-selector"
-                            className="ContextSelector"
-                          >
-                            <select
-                              value={currentContext}
-                              onChange={e =>
-                                this.setState({
-                                  selectedContextIndex:
-                                    contexts.findIndex(
-                                      c => c === e.target.value,
-                                    ) || 0,
-                                })}
-                            >
-                              {contexts.map((name, i) => (
-                                <option value={name}>{name}</option>
-                              ))}
-                            </select>
-                          </div>
-                          <Contextualize
-                            key="typonym"
+                    <Switch>
+                      <Route
+                        exact
+                        path="/"
+                        render={() => (
+                          <Projects
                             font={font}
                             project={currentProject}
-                            context={currentContext}
-                            typonym={typonym}
-                            updateTyponym={typonym =>
-                              this.saveTyponym(typonymId, typonym)}
+                            onChangeValues={newValues =>
+                              this.saveValues(selectedProjectIndex, newValues)}
+                            onRenameProject={newName =>
+                              this.renameProject(selectedProjectIndex, newName)}
                           />
-                        </div>
-                      )}
-                    />
-                    <Route component={NoMatch} />
-                  </Switch>
-                </div>
-              )}
-            />
-          </Switch>
+                        )}
+                      />
+                      <Route
+                        path="/contextualize"
+                        render={() => (
+                          <div className="Main">
+                            <div
+                              key="context-selector"
+                              className="ContextSelector"
+                            >
+                              <select
+                                value={currentContext}
+                                onChange={e =>
+                                  this.setState({
+                                    selectedContextIndex:
+                                      contexts.findIndex(
+                                        c => c === e.target.value
+                                      ) || 0
+                                  })}
+                              >
+                                {contexts.map((name, i) => (
+                                  <option value={name}>{name}</option>
+                                ))}
+                              </select>
+                            </div>
+                            <Contextualize
+                              key="typonym"
+                              font={font}
+                              project={currentProject}
+                              context={currentContext}
+                              typonym={typonym}
+                              updateTyponym={typonym =>
+                                this.saveTyponym(typonymId, typonym)}
+                            />
+                          </div>
+                        )}
+                      />
+                      <Route component={NoMatch} />
+                    </Switch>
+                  </div>
+                )}
+              />
+            </Switch>
+          )}
         </div>
       </Router>
     );

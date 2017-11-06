@@ -16,6 +16,22 @@ import Preview from "./Preview";
 const NoMatch = () => <div>Oops</div>;
 
 class ProjectList extends Component {
+  openFile = () => {
+    this.file.click();
+  };
+
+  importProjects = () => {
+    const reader = new FileReader();
+    reader.addEventListener("loadend", e => {
+      try {
+        const data = JSON.parse(e.target.result);
+
+        this.props.importProjects(data);
+      } catch (err) {}
+    });
+    reader.readAsText(this.file.files[0]);
+  };
+
   render() {
     const {
       projects,
@@ -26,6 +42,27 @@ class ProjectList extends Component {
 
     return (
       <div className="Projects">
+        <Route
+          exact
+          path="/"
+          render={() => (
+            <div className="Projects-import">
+              <input
+                style={{ display: "none" }}
+                onChange={this.importProjects}
+                ref={node => (this.file = node)}
+                type="file"
+              />
+              <button
+                className="Projects-import-button"
+                onClick={this.openFile}
+              >
+                Import Projects
+              </button>
+            </div>
+          )}
+        />
+
         <ul className="Projects-list">
           {projects.map(({ id, name }, i) => (
             <li key={id} className="Projects-list-item">
@@ -114,6 +151,26 @@ class App extends Component {
       })
     );
   }
+
+  importProjects = data => {
+    this.setState(state => ({
+      projects: [
+        // filter already projects with same ids
+        ...state.projects.filter(
+          ({ id }) => !data.projects.some(project => project.id === id)
+        ),
+        ...data.projects
+      ],
+      contexts: [
+        // filter already existing contexts
+        ...state.contexts.filter(
+          context => !data.contexts.some(c => c === context)
+        ),
+        ...data.contexts
+      ],
+      typonyms: { ...state.typonyms, ...data.typonyms }
+    }));
+  };
 
   addProject = () => {
     this.setState(state => ({
@@ -278,6 +335,7 @@ class App extends Component {
                       selectedProjectIndex={selectedProjectIndex}
                       onAddProject={this.addProject}
                       onSelectProject={this.selectProject}
+                      importProjects={this.importProjects}
                     />
                     <Switch>
                       <Route

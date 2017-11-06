@@ -44,6 +44,16 @@
   cursor: pointer;
 }
 
+.Projects-import {
+  display: flex;
+}
+
+.Projects-import-button {
+  flex: 1;
+  padding: 20px;
+  cursor: pointer;
+}
+
 .Project {
   flex: 1;
 

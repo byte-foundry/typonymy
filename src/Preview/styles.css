@@ -1,11 +1,12 @@
 .Preview {
   display: flex;
   flex: 1;
+  min-height: 0;
 }
 
 .Preview-contexts {
   flex: 0 0 300px;
-  
+
   display: flex;
   flex-direction: column;
 }
@@ -22,6 +23,7 @@
   flex: 1;
   margin: 0;
   padding: 0;
+  overflow-y: auto;
 }
 
 .Preview-typonyms-item {

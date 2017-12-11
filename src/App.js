@@ -116,7 +116,7 @@ class App extends Component {
 
     const font = await prototypoFontFactory.createFont(
       "CustomFont",
-      Ptypo.templateNames.SPECTRAL
+      "topo.ptf"
     );
 
     this.setState({ font });

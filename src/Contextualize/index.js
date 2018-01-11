@@ -1,10 +1,10 @@
 /* global Ptypo */
 
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import Curve from '../Curve';
+import Curve from "../Curve";
 
-import './styles.css';
+import "./styles.css";
 
 class Contextualize extends Component {
   constructor() {
@@ -12,7 +12,7 @@ class Contextualize extends Component {
 
     this.state = {
       font: null,
-      selectedKeypointIndex: 0,
+      selectedKeypointIndex: 0
     };
   }
 
@@ -20,13 +20,13 @@ class Contextualize extends Component {
     var prototypoFontFactory = new Ptypo.default();
 
     const font = await prototypoFontFactory.createFont(
-      'CustomFont2',
-      Ptypo.templateNames.SPECTRAL,
+      "CustomFont2",
+      "topo.ptf"
     );
 
     this.setState({ font });
 
-    window.fitText(document.getElementById('responsive-font-input'));
+    window.fitText(document.getElementById("responsive-font-input"));
   }
 
   componentWillReceiveProps({ project, context, typonym }) {
@@ -49,22 +49,22 @@ class Contextualize extends Component {
       prevState.selectedKeypointIndex !== this.state.selectedKeypointIndex &&
       this.state.font.changeParams({
         ...this.props.project.values,
-        ...currentKeypoint[1],
+        ...currentKeypoint[1]
       });
   }
 
   updateKeypoints = keypoints => {
     this.props.updateTyponym({
       ...this.props.typonym,
-      keypoints,
+      keypoints
     });
   };
 
   createKeypoint = position => {
     this.updateKeypoints(
       this.props.typonym.keypoints.concat([
-        [position, /*this.props.project.values*/ {}],
-      ]),
+        [position, /*this.props.project.values*/ {}]
+      ])
     );
   };
 
@@ -78,10 +78,10 @@ class Contextualize extends Component {
         typonym.keypoints[selectedKeypointIndex][0],
         {
           ...typonym.keypoints[selectedKeypointIndex][1],
-          [name]: value ? Number(value) : undefined,
-        },
+          [name]: value ? Number(value) : undefined
+        }
       ],
-      ...typonym.keypoints.slice(selectedKeypointIndex + 1),
+      ...typonym.keypoints.slice(selectedKeypointIndex + 1)
     ]);
   };
 
@@ -89,7 +89,7 @@ class Contextualize extends Component {
     const { project } = this.props;
     this.saveParam(
       name,
-      value === 'on' || value === true ? project.values[name] : undefined,
+      value === "on" || value === true ? project.values[name] : undefined
     );
   };
 
@@ -104,11 +104,11 @@ class Contextualize extends Component {
         value
           ? {
               ...project.values,
-              ...typonym.keypoints[selectedKeypointIndex][1],
+              ...typonym.keypoints[selectedKeypointIndex][1]
             }
-          : {},
+          : {}
       ],
-      ...typonym.keypoints.slice(selectedKeypointIndex + 1),
+      ...typonym.keypoints.slice(selectedKeypointIndex + 1)
     ]);
   };
 
@@ -132,7 +132,7 @@ class Contextualize extends Component {
           <div className="Contextualize-curve-cursor-container">
             <div
               className="Contextualize-curve-cursor"
-              style={{ left: currentKeypoint[0] + '%' }}
+              style={{ left: currentKeypoint[0] + "%" }}
             />
           </div>
         </div>
@@ -144,7 +144,7 @@ class Contextualize extends Component {
               className="Project-name-input"
               type="text"
               defaultValue={project.name}
-              style={{ fontFamily: 'CustomFont2' }}
+              style={{ fontFamily: "CustomFont2" }}
             />
           </div>
 
@@ -179,7 +179,7 @@ class Contextualize extends Component {
                       <p className="ParamsList-item-label">
                         <input
                           type="checkbox"
-                          checked={typeof currentKeypoint[1][name] === 'number'}
+                          checked={typeof currentKeypoint[1][name] === "number"}
                           onChange={e => this.toggleParam(name, e.target.value)}
                         />
                         {name}
@@ -193,7 +193,7 @@ class Contextualize extends Component {
                         max={max}
                         step={step}
                         value={
-                          typeof currentKeypoint[1][name] !== 'undefined'
+                          typeof currentKeypoint[1][name] !== "undefined"
                             ? currentKeypoint[1][name]
                             : project.values[name]
                         }

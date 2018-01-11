@@ -1,15 +1,15 @@
 /* global Ptypo */
 
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import './styles.css';
+import "./styles.css";
 
 class ProjectPreview extends Component {
   constructor() {
     super();
 
     this.state = {
-      font: null,
+      font: null
     };
   }
 
@@ -19,8 +19,8 @@ class ProjectPreview extends Component {
     this.setState({ loading: true });
 
     const font = await prototypoFontFactory.createFont(
-      'CustomFont-' + this.props.id,
-      Ptypo.templateNames.SPECTRAL,
+      "CustomFont-" + this.props.id,
+      "topo.ptf"
     );
 
     font.changeParams(this.props.values);
@@ -33,17 +33,21 @@ class ProjectPreview extends Component {
   }
 
   render() {
-    const {loading} = this.state;
+    const { loading } = this.state;
     const { id, name, className } = this.props;
 
     if (loading) {
-      return <p className={'ProjectPreview ProjectPreview--loading ' + className}>loading...</p>;
+      return (
+        <p className={"ProjectPreview ProjectPreview--loading " + className}>
+          loading...
+        </p>
+      );
     }
 
     return (
       <p
-        className={'ProjectPreview ' + className}
-        style={{ fontFamily: 'CustomFont-' + id }}
+        className={"ProjectPreview " + className}
+        style={{ fontFamily: "CustomFont-" + id }}
       >
         {name}
       </p>

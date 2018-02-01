@@ -24,48 +24,82 @@ class Preview extends Component {
             return {};
           }
 
-          const sortedKeypoints = [...typonym.keypoints].sort(
-            (a, b) => a[0] > b[0],
-          );
+          return Object.entries(project.values)
+            .map(([paramName, paramBaseValue]) => {
+              // get the keypoints sorted from 0 to 100
+              const sortedKeypoints = [...typonym.keypoints].sort(
+                (a, b) => a[0] > b[0]
+              );
 
-          let minIndex = 0;
-          let maxIndex = 0;
-          sortedKeypoints.forEach((keypoint, i) => {
-            const prevMinDiff = value - sortedKeypoints[minIndex][0];
-            const prevMaxDiff = value - sortedKeypoints[maxIndex][0];
-            const diff = value - keypoint[0];
+              if (sortedKeypoints[0][1][paramName] === undefined)
+                sortedKeypoints[0][1][paramName] = paramBaseValue;
+              if (
+                sortedKeypoints[sortedKeypoints.length - 1][1][paramName] ===
+                undefined
+              )
+                sortedKeypoints[sortedKeypoints.length - 1][1][
+                  paramName
+                ] = paramBaseValue;
 
-            // smaller diff, minimum changes
-            if (diff >= 0 && diff < prevMinDiff) {
-              minIndex = i;
-            }
+              // finding the right value to diff
+              let minIndex = 0;
+              let maxIndex = 0;
+              sortedKeypoints.forEach((keypoint, i) => {
+                // In case the parameter hasn't been defined for this keypoint
+                if (!keypoint[1][paramName]) {
+                  return;
+                }
 
-            // smaller negative diff, maximum changes
-            if (diff <= 0 && (diff > prevMaxDiff || prevMaxDiff > 0)) {
-              maxIndex = i;
-            }
-          });
+                const prevMinDiff = value - sortedKeypoints[minIndex][0];
+                const prevMaxDiff = value - sortedKeypoints[maxIndex][0];
+                const diff = value - keypoint[0];
 
-          const result = { ...sortedKeypoints[minIndex][1] };
+                // smaller diff, minimum changes
+                if (diff >= 0 && diff < prevMinDiff) {
+                  minIndex = i;
+                }
 
-          if (minIndex === maxIndex) {
-            return result;
-          }
+                // smaller negative diff, maximum changes
+                if (diff <= 0 && (diff > prevMaxDiff || prevMaxDiff > 0)) {
+                  maxIndex = i;
+                }
+              });
 
-          const topKeypoint = sortedKeypoints[maxIndex];
-          const bottomKeypoint = sortedKeypoints[minIndex];
-          Object.entries(result).forEach(([key, paramValue]) => {
-            const coeff =
-              (topKeypoint[1][key] - paramValue) /
-              (topKeypoint[0] - bottomKeypoint[0]);
-            const b = paramValue - coeff * bottomKeypoint[0];
+              let topKeypoint = sortedKeypoints[maxIndex];
+              let bottomKeypoint = sortedKeypoints[minIndex];
+              let topValue = topKeypoint[1][paramName];
+              let bottomValue = bottomKeypoint[1][paramName];
 
-            result[key] = value * coeff + b;
-          });
+              // console.log(paramName, ' topValue: ', maxIndex, '→', topValue, 'bottomValue: ', minIndex, '→', bottomValue);
 
-          return result;
+              if (maxIndex === 0 && value !== 0) {
+                // finding the upper keypoint that has the parameter defined, so we can compute the coeff
+                const upperKeypoint = sortedKeypoints
+                  .slice(minIndex + 1)
+                  .find(keypoint => keypoint[1].hasOwnProperty(paramName));
+                topKeypoint = upperKeypoint || [
+                  100,
+                  { [paramName]: paramBaseValue },
+                ];
+                topValue = topKeypoint[1][paramName];
+              } else if (minIndex === maxIndex) {
+                // top and bottom are the same
+                return [paramName, sortedKeypoints[minIndex][1][paramName]];
+              }
+
+              const coeff =
+                (topValue - bottomValue) / (topKeypoint[0] - bottomKeypoint[0]);
+              const b = bottomValue - coeff * bottomKeypoint[0];
+
+              return [paramName, value * coeff + b];
+            })
+            .reduce((values, [name, value]) => {
+              values[name] = value;
+              return values;
+            }, {});
         })
         .reduce((prev, keypointValues) => {
+          // mean between each context
           Object.entries(keypointValues).forEach(([key, value]) => {
             if (prev[key] && value) {
               prev[key] = (prev[key] + value) / 2;

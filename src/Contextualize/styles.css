@@ -1,6 +1,7 @@
 .Contextualize {
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
 .Contextualize-curve {

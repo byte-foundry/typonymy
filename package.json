@@ -22,5 +22,9 @@
     "husky": "^0.14.3",
     "lint-staged": "^4.3.0",
     "prettier": "1.7.4"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "es5"
   }
 }
